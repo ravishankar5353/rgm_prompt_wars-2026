@@ -14,6 +14,7 @@ import {
   Key,
   HelpCircle,
   Menu,
+  LogOut,
 } from 'lucide-react';
 import { useTechReel } from '../../context/TechReelContext';
 import { NotificationCenter } from './NotificationCenter';
@@ -37,6 +38,8 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
     unreadNotificationCount,
     geminiKey,
     setGeminiKey,
+    isAuthenticated,
+    logout,
   } = useTechReel();
 
   const [showNotifications, setShowNotifications] = useState(false);
@@ -193,6 +196,18 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
           >
             <Shield size={16} />
           </button>
+
+          {/* Logout Button (visible when authenticated) */}
+          {isAuthenticated && (
+            <button
+              onClick={logout}
+              className="btn btn-ghost btn-sm"
+              title="Sign Out"
+              style={{ padding: '6px 10px', color: 'var(--accent-rose)' }}
+            >
+              <LogOut size={16} />
+            </button>
+          )}
         </div>
       </header>
 

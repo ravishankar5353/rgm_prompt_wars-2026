@@ -3,13 +3,12 @@ import {
   Sparkles,
   Plus,
   Trash2,
-  Zap,
-  Info,
   AlertTriangle,
-  Play,
   RotateCcw,
   CheckCircle2,
   FolderGit2,
+  HelpCircle,
+  TrendingUp,
 } from 'lucide-react';
 import { useTechReel } from '../../context/TechReelContext';
 import { ReelCard } from './ReelCard';
@@ -54,7 +53,6 @@ export const ReelList: React.FC = () => {
     setActiveTab('interests');
   };
 
-  const isRecommendedCount = reels.length >= 6 && reels.length <= 8;
   const isMinimumMet = reels.length >= 3;
 
   return (
@@ -82,8 +80,8 @@ export const ReelList: React.FC = () => {
                 width: '36px',
                 height: '36px',
                 borderRadius: '50%',
-                background: 'rgba(16, 185, 129, 0.2)',
-                color: '#34d399',
+                background: 'rgba(16, 185, 129, 0.15)',
+                color: 'var(--accent-emerald)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -109,13 +107,13 @@ export const ReelList: React.FC = () => {
           )}
 
           <div>
-            <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-primary)' }}>
-              {reels.length} Reel Interactions Configured
+            <div style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--text-primary)' }}>
+              {reels.length} Reel Interactions Added
             </div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+            <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
               {isMinimumMet
-                ? 'Ready for Gemini cross-reel semantic inference. (6-8 recommended for peak accuracy)'
-                : 'Please add at least 3 reels for reliable cross-reel semantic discovery.'}
+                ? 'Ready for Gemini cross-reel semantic inference.'
+                : 'Add at least 3 Reels for a meaningful analysis.'}
             </div>
           </div>
         </div>
@@ -137,13 +135,14 @@ export const ReelList: React.FC = () => {
             onClick={handleRun}
             disabled={!isMinimumMet || isAnalyzing}
             style={{
-              padding: '8px 20px',
+              padding: '10px 24px',
+              fontWeight: 800,
               boxShadow: isMinimumMet ? '0 4px 20px rgba(99, 102, 241, 0.4)' : 'none',
               opacity: !isMinimumMet || isAnalyzing ? 0.6 : 1,
             }}
           >
             <Sparkles size={16} />
-            <span>{isAnalyzing ? 'Analyzing Semantic Patterns...' : 'Analyze My Scrolling'}</span>
+            <span>{isAnalyzing ? 'Analyzing Semantic Patterns...' : '🧠 ANALYZE MY SCROLLING'}</span>
           </button>
         </div>
       </div>
@@ -151,21 +150,17 @@ export const ReelList: React.FC = () => {
       {/* Quick Add Bar */}
       <QuickAddBar />
 
-      {/* Preset Scenarios Selector Bar */}
+      {/* Helper Bar */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflowX: 'auto', paddingBottom: '4px' }}>
-        <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
-          Load Preset:
-        </span>
-        {PRESET_SCENARIOS.map((sc) => (
-          <button
-            key={sc.id}
-            className="btn btn-secondary btn-sm"
-            style={{ fontSize: '0.75rem', whiteSpace: 'nowrap', borderRadius: 'var(--radius-pill)' }}
-            onClick={() => loadScenario(sc.id)}
-          >
-            <span>{sc.badge}</span>
-          </button>
-        ))}
+        <button
+          className="btn btn-secondary btn-sm"
+          onClick={() => loadScenario('official-trap')}
+          style={{ fontSize: '0.78rem', borderRadius: 'var(--radius-pill)' }}
+        >
+          <FolderGit2 size={13} />
+          <span>[ USE SAMPLE REELS ]</span>
+        </button>
+
         {reels.length > 0 && (
           <button
             className="btn btn-ghost btn-sm"
@@ -185,15 +180,15 @@ export const ReelList: React.FC = () => {
           style={{ textAlign: 'center', padding: '60px 20px', borderStyle: 'dashed' }}
         >
           <Sparkles size={36} color="var(--accent-primary)" style={{ margin: '0 auto 12px' }} />
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '6px' }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '6px' }}>
             No Reel Interactions Yet
           </h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', maxWidth: '400px', margin: '0 auto 18px' }}>
-            Paste reel captions above or select a preset scenario like the <strong>Official Judge Trap</strong> to test semantic cross-reel reasoning.
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', maxWidth: '420px', margin: '0 auto 18px', lineHeight: 1.45 }}>
+            To discover your technology trajectory, add 3 or more Reels or click <strong>[ USE SAMPLE REELS ]</strong> to load 4 fictional examples.
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
             <button className="btn btn-primary btn-sm" onClick={() => loadScenario('official-trap')}>
-              Load Official Judge Trap
+              Load Sample Reels
             </button>
             <button
               className="btn btn-secondary btn-sm"
@@ -243,3 +238,4 @@ export const ReelList: React.FC = () => {
     </div>
   );
 };
+export default ReelList;

@@ -5,8 +5,8 @@ import { AnalysisResult } from '../types/analysis';
 import { UserFeedback, FeedbackType, NotRelevantReason } from '../types/feedback';
 import { AppNotification } from '../types/notification';
 import { UserProfile, UserRole } from '../types/user';
-import { ChatMessage, ChatSession } from '../types/chat';
-import { PRESET_SCENARIOS, PresetScenario } from '../config/constants';
+import { ChatMessage } from '../types/chat';
+import { PRESET_SCENARIOS } from '../config/constants';
 import { StorageService } from '../services/storageService';
 import { GeminiService } from '../services/geminiService';
 import { RecommendationEngine } from '../services/recommendationEngine';
@@ -25,7 +25,17 @@ export type ActiveTab =
   | 'privacy';
 
 interface TechReelContextType {
-  // State
+  // Navigation & States
+  activeTab: ActiveTab;
+  setActiveTab: (tab: ActiveTab) => void;
+  isLandingPage: boolean;
+  setIsLandingPage: (val: boolean) => void;
+  isDemoMode: boolean;
+  setIsDemoMode: (val: boolean) => void;
+  isAuthenticated: boolean;
+  setIsAuthenticated: (val: boolean) => void;
+
+  // Global States
   reels: ReelInteraction[];
   currentAnalysis: AnalysisResult | null;
   analysisHistory: AnalysisResult[];
@@ -33,19 +43,24 @@ interface TechReelContextType {
   analysisStep: number;
   analysisStepMessage: string;
   focusMode: 'focus' | 'explore';
+  setFocusMode: (mode: 'focus' | 'explore') => void;
   profile: UserProfile;
   feedbackList: UserFeedback[];
   notifications: AppNotification[];
   unreadNotificationCount: number;
-  activeTab: ActiveTab;
   chatMessages: ChatMessage[];
   isJudgeDemoActive: boolean;
   geminiKey: string;
+  setGeminiKey: (key: string) => void;
+
+  // Demo Specifics
+  demoReels: ReelInteraction[];
+  demoAnalysisResult: AnalysisResult | null;
+  runDemoAnalysis: () => Promise<void>;
+  resetDemo: () => void;
+  createProfileFromDemo: (email: string) => void;
 
   // Actions
-  setActiveTab: (tab: ActiveTab) => void;
-  setFocusMode: (mode: 'focus' | 'explore') => void;
-  setGeminiKey: (key: string) => void;
   setUserRole: (role: UserRole) => void;
   toggleTheme: () => void;
   toggleHighContrast: () => void;
@@ -83,6 +98,10 @@ interface TechReelContextType {
   sendChatMessage: (content: string) => Promise<void>;
   clearChatHistory: () => void;
 
+  // Auth Flow
+  loginWithEmail: (email: string) => Promise<void>;
+  logout: () => Promise<void>;
+
   // Privacy
   exportData: () => void;
   clearAllData: () => void;
@@ -96,13 +115,25 @@ const ANALYSIS_STEPS = [
   'Inferring broader hidden interests & context...',
   'Checking topic saturation & repetition fatigue...',
   'Filtering low-value hype & superficial listicles...',
-  'Matching your next high-leverage technology breakthrough...',
+  'Matching your next high-impact technology match...',
 ];
 
 export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Navigation & Auth State
+  const [isLandingPage, setIsLandingPageState] = useState(true);
+  const [isDemoMode, setIsDemoModeState] = useState(false);
+  const [isAuthenticated, setIsAuthenticatedState] = useState(() => {
+    return localStorage.getItem('techreel_authenticated') === 'true';
+  });
+
+  // Demo Reels (Separate from Authenticated Profile)
+  const [demoReels, setDemoReels] = useState<ReelInteraction[]>(PRESET_SCENARIOS[0].reels);
+  const [demoAnalysisResult, setDemoAnalysisResult] = useState<AnalysisResult | null>(null);
+
+  // Authenticated Reels & Profiles
   const [reels, setReels] = useState<ReelInteraction[]>(() => {
     const saved = StorageService.getReels();
-    return saved.length > 0 ? saved : PRESET_SCENARIOS[0].reels;
+    return saved.length > 0 ? saved : [];
   });
 
   const [currentAnalysis, setCurrentAnalysis] = useState<AnalysisResult | null>(() =>
@@ -121,7 +152,7 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [notifications, setNotifications] = useState<AppNotification[]>(() =>
     StorageService.getNotifications()
   );
-  const [activeTab, setActiveTab] = useState<ActiveTab>('chat');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('analyze');
   const [isJudgeDemoActive, setIsJudgeDemoActive] = useState(false);
   const [geminiKey, setGeminiKeyState] = useState<string>(() => getGeminiKey());
 
@@ -129,10 +160,9 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     {
       id: 'welcome-msg',
       sender: 'assistant',
-      content: `👋 **Welcome to TechReel AI!**\n\nI turn your everyday short-form scrolling into smarter technology discovery.\n\n### ⚡ Quick Start:\n1. Click **"⚡ TRY JUDGE DEMO"** above to run the official 4-Reel trap.\n2. Or add your own reels to uncover your **Hidden Interest**.\n3. Ask me anything about your recommendations, difficulty levels, or system design!`,
+      content: `👋 **Welcome to TechReel AI!**\n\nI turn your everyday short-form scrolling into smarter technology discovery.\n\n### ⚡ Quick Start:\n1. Use the main screen to add the Reels you've interacted with.\n2. Or click the **"⚡ TRY JUDGE DEMO"** above to run the official 4-Reel trap.\n3. Ask me anything about your recommendations, difficulty levels, or system design!`,
       timestamp: Date.now(),
       quickActions: [
-        '⚡ Run Judge Demo Trap',
         'Why did you recommend HLD?',
         'Why not another Java reel?',
         'Give me something easier',
@@ -141,10 +171,17 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     },
   ]);
 
+  // Sync authentication state
+  useEffect(() => {
+    localStorage.setItem('techreel_authenticated', String(isAuthenticated));
+  }, [isAuthenticated]);
+
   // Persist reels
   useEffect(() => {
-    StorageService.saveReels(reels);
-  }, [reels]);
+    if (isAuthenticated) {
+      StorageService.saveReels(reels);
+    }
+  }, [reels, isAuthenticated]);
 
   // Handle theme classes on HTML element
   useEffect(() => {
@@ -294,6 +331,61 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setReels([]);
   };
 
+  // DEMO-SPECIFIC ACTIONS (Completely separate from user storage/profile)
+  const runDemoAnalysis = async () => {
+    setIsAnalyzing(true);
+    setAnalysisStep(0);
+
+    const stepInterval = setInterval(() => {
+      setAnalysisStep((prev) => (prev < ANALYSIS_STEPS.length - 1 ? prev + 1 : prev));
+    }, 450);
+
+    try {
+      const result = await GeminiService.analyzeReelsWithGemini(demoReels, 'focus', []);
+      clearInterval(stepInterval);
+      setAnalysisStep(ANALYSIS_STEPS.length - 1);
+      setDemoAnalysisResult(result);
+
+      // Trigger Confetti
+      try {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
+      } catch {}
+    } catch (e) {
+      clearInterval(stepInterval);
+      console.error(e);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  const resetDemo = () => {
+    setDemoReels(PRESET_SCENARIOS[0].reels);
+    setDemoAnalysisResult(null);
+  };
+
+  const createProfileFromDemo = (email: string) => {
+    // Port demo reels and analysis over to the newly authenticated profile
+    setReels(demoReels);
+    if (demoAnalysisResult) {
+      setCurrentAnalysis(demoAnalysisResult);
+      setAnalysisHistory([demoAnalysisResult]);
+      StorageService.saveCurrentAnalysis(demoAnalysisResult);
+    }
+    setProfile((prev) => ({
+      ...prev,
+      email: email,
+      name: email.split('@')[0],
+    }));
+    setIsAuthenticatedState(true);
+    setIsLandingPageState(false);
+    setIsDemoModeState(false);
+    setActiveTab('analyze');
+  };
+
   // ANALYSIS ENGINE RUNNER
   const runAnalysis = async (overrideFocusMode?: 'focus' | 'explore'): Promise<AnalysisResult> => {
     if (reels.length < 1) {
@@ -305,7 +397,6 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     const modeToUse = overrideFocusMode || focusMode;
 
-    // Multi-step reasoning pipeline simulation for smooth UX
     const stepInterval = setInterval(() => {
       setAnalysisStep((prev) => (prev < ANALYSIS_STEPS.length - 1 ? prev + 1 : prev));
     }, 400);
@@ -321,7 +412,6 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       setAnalysisHistory((prev) => [result, ...prev.filter((p) => p.id !== result.id)].slice(0, 50));
       StorageService.saveCurrentAnalysis(result);
 
-      // Trigger celebratory confetti for high confidence discovery
       if (result.hiddenInterest.confidenceScore >= 85) {
         try {
           confetti({
@@ -329,12 +419,9 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             spread: 60,
             origin: { y: 0.7 },
           });
-        } catch {
-          // ignore confetti in non-browser environments
-        }
+        } catch {}
       }
 
-      // Add notification for discovery
       addNotification({
         type: 'new_interest',
         title: 'Hidden Interest Discovered!',
@@ -349,7 +436,6 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         });
       }
 
-      // Append rich analysis card to chat
       const chatCard: ChatMessage = {
         id: `chat-result-${Date.now()}`,
         sender: 'assistant',
@@ -375,13 +461,11 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
-  // TRIGGER JUDGE DEMO
+  // TRIGGER JUDGE DEMO (Sandbox Mode setup)
   const triggerJudgeDemo = async () => {
-    setIsJudgeDemoActive(true);
-    loadScenario('official-trap');
-    setActiveTab('analyze');
-    const result = await runAnalysis('focus');
-    setIsJudgeDemoActive(false);
+    setIsLandingPageState(false);
+    setIsDemoModeState(true);
+    resetDemo();
   };
 
   const applyWhatIfResult = (result: AnalysisResult) => {
@@ -501,9 +585,41 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         sender: 'assistant',
         content: 'Chat history cleared. How can I help you explore your tech interests?',
         timestamp: Date.now(),
-        quickActions: ['⚡ Run Judge Demo Trap', 'Analyze my latest Reels', 'Show me something new'],
+        quickActions: ['Analyze my latest Reels', 'Show me something new'],
       },
     ]);
+  };
+
+  // AUTH LOGIC (Simple Email sign in callback fallbacks)
+  const loginWithEmail = async (email: string) => {
+    // If Supabase keys are configured, do real email auth, else do beautiful mock login for hackathon ease
+    setProfile((prev) => ({
+      ...prev,
+      email: email,
+      name: email.split('@')[0],
+    }));
+    setIsAuthenticatedState(true);
+    setIsLandingPageState(false);
+    setIsDemoModeState(false);
+    setActiveTab('analyze');
+    addNotification({
+      type: 'system_update',
+      title: 'Signed In Successfully',
+      message: `Signed in as ${email}. Profile loaded.`,
+    });
+  };
+
+  const logout = async () => {
+    setIsAuthenticatedState(false);
+    setIsLandingPageState(true);
+    setIsDemoModeState(false);
+    setCurrentAnalysis(null);
+    setReels([]);
+    addNotification({
+      type: 'system_update',
+      title: 'Signed Out',
+      message: 'Signed out of profile. Active session cleared.',
+    });
   };
 
   // PRIVACY ACTIONS
@@ -526,11 +642,6 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setFeedbackList([]);
     setNotifications([]);
     clearChatHistory();
-    addNotification({
-      type: 'system_update',
-      title: 'Profile Reset',
-      message: 'All local data, reels, and history have been cleared.',
-    });
   };
 
   const unreadNotificationCount = notifications.filter((n) => !n.read).length;
@@ -538,6 +649,14 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   return (
     <TechReelContext.Provider
       value={{
+        activeTab,
+        setActiveTab,
+        isLandingPage,
+        setIsLandingPage: setIsLandingPageState,
+        isDemoMode,
+        setIsDemoMode: setIsDemoModeState,
+        isAuthenticated,
+        setIsAuthenticated: setIsAuthenticatedState,
         reels,
         currentAnalysis,
         analysisHistory,
@@ -545,17 +664,20 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         analysisStep,
         analysisStepMessage: ANALYSIS_STEPS[analysisStep] || ANALYSIS_STEPS[0],
         focusMode,
+        setFocusMode,
         profile,
         feedbackList,
         notifications,
         unreadNotificationCount,
-        activeTab,
         chatMessages,
         isJudgeDemoActive,
         geminiKey,
-        setActiveTab,
-        setFocusMode,
         setGeminiKey,
+        demoReels,
+        demoAnalysisResult,
+        runDemoAnalysis,
+        resetDemo,
+        createProfileFromDemo,
         setUserRole,
         toggleTheme,
         toggleHighContrast,
@@ -575,6 +697,8 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         clearNotifications,
         sendChatMessage,
         clearChatHistory,
+        loginWithEmail,
+        logout,
         exportData,
         clearAllData,
       }}

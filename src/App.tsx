@@ -16,8 +16,9 @@ import { AnalyticsDashboard } from './components/dashboard/AnalyticsDashboard';
 import { HistoryView } from './components/dashboard/HistoryView';
 import { WhatIfSimulator } from './components/simulator/WhatIfSimulator';
 import { JudgeDemoWalkthrough } from './components/judge/JudgeDemoWalkthrough';
+import { LandingPage } from './components/common/LandingPage';
 import { AnalysisLoadingState } from './components/analysis/AnalysisLoadingState';
-import { Sparkles, MessageSquare, Layers, Shield } from 'lucide-react';
+import { Sparkles, Shield } from 'lucide-react';
 
 export const App: React.FC = () => {
   const {
@@ -25,18 +26,25 @@ export const App: React.FC = () => {
     setActiveTab,
     currentAnalysis,
     isAnalyzing,
-    isJudgeDemoActive,
+    isLandingPage,
+    isDemoMode,
   } = useTechReel();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Route 1: Landing Page (unauthenticated, fresh visitor)
+  if (isLandingPage) {
+    return <LandingPage />;
+  }
+
+  // Route 2: One-time Judge Demo Sandbox (no auth needed)
+  if (isDemoMode) {
+    return <JudgeDemoWalkthrough />;
+  }
+
   const renderWorkspaceContent = () => {
     if (isAnalyzing) {
       return <AnalysisLoadingState />;
-    }
-
-    if (isJudgeDemoActive) {
-      return <JudgeDemoWalkthrough />;
     }
 
     switch (activeTab) {
@@ -73,7 +81,7 @@ export const App: React.FC = () => {
                   No Active Analysis
                 </h3>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', maxWidth: '400px', margin: '0 auto 18px' }}>
-                  Add reel interactions or run the Judge Demo to discover your underlying technology interests.
+                  Add reel interactions and run the analysis to discover your underlying technology interests.
                 </p>
                 <button className="btn btn-primary btn-sm" onClick={() => setActiveTab('analyze')}>
                   Go to Reel Inputs
