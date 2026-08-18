@@ -412,6 +412,9 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       setAnalysisHistory((prev) => [result, ...prev.filter((p) => p.id !== result.id)].slice(0, 50));
       StorageService.saveCurrentAnalysis(result);
 
+      // Auto-navigate to the unified results page
+      setActiveTab('interests');
+
       if (result.hiddenInterest.confidenceScore >= 85) {
         try {
           confetti({

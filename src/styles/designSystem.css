@@ -517,14 +517,60 @@ body {
 /* Responsive adjustments */
 @media (max-width: 900px) {
   .chat-sidebar {
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
+    z-index: 100;
     transform: translateX(-100%);
     box-shadow: var(--shadow-lg);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .chat-sidebar.open {
     transform: translateX(0);
+  }
+
+  /* Show the X close button on mobile */
+  .chat-sidebar .btn.btn-ghost {
+    display: flex !important;
+  }
+
+  .main-workspace {
+    width: 100%;
+  }
+
+  .workspace-content {
+    padding: 14px 12px;
+  }
+
+  .workspace-header {
+    padding: 10px 14px;
+  }
+
+  /* Stack mode toggle on mobile */
+  .mode-toggle {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Prevent long horizontal overflow */
+  .glass-card {
+    border-radius: var(--radius-md);
+  }
+
+  /* Bigger tap targets */
+  .btn {
+    min-height: 40px;
+  }
+
+  /* Hidden interest title scale */
+  .hidden-title {
+    font-size: clamp(1.5rem, 7vw, 2.2rem) !important;
+  }
+
+  /* Stack recommendation DNA grid */
+  .dna-grid {
+    grid-template-columns: 1fr 1fr !important;
   }
 }

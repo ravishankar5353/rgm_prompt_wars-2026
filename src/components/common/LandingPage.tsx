@@ -1,78 +1,139 @@
-import React, { useState } from 'react';
-import { Sparkles, Zap, ArrowRight, Mail, Film, Brain, Scale } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Zap, Mail, Brain, ArrowRight, Sparkles } from 'lucide-react';
 import { useTechReel } from '../../context/TechReelContext';
+
+// Animated step-through the signal chain
+const SIGNALS = ['JAVA MEME ☕', 'CODING INTERVIEW 💻', 'SWE CAREER 🚀', 'LAPTOP GADGET 🔌'];
 
 export const LandingPage: React.FC = () => {
   const { triggerJudgeDemo, loginWithEmail } = useTechReel();
   const [email, setEmail] = useState('');
   const [showEmailInput, setShowEmailInput] = useState(false);
   const [linkSent, setLinkSent] = useState(false);
+  const [activeSignal, setActiveSignal] = useState(0);
+
+  // Cycle through signal pills for visual effect
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSignal((prev) => (prev + 1) % SIGNALS.length);
+    }, 900);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !email.includes('@')) return;
-
-    // Simulate Supabase secure passwordless sign-in flow
     setLinkSent(true);
+    // Auto sign-in after brief delay (magic link simulation for hackathon demo)
     setTimeout(() => {
-      // Graceful auto-sign-in fallback for ease of hackathon demo usage
       loginWithEmail(email.trim());
-    }, 1500);
+    }, 1400);
   };
 
   return (
     <div
       style={{
         minHeight: '100vh',
-        background: 'radial-gradient(circle at 50% 15%, rgba(99, 102, 241, 0.15) 0%, transparent 50%), radial-gradient(circle at 0% 100%, rgba(139, 92, 246, 0.08) 0%, transparent 40%), var(--bg-primary)',
-        color: 'var(--text-primary)',
+        background: `
+          radial-gradient(ellipse 80% 50% at 50% -10%, rgba(99,102,241,0.18) 0%, transparent 70%),
+          radial-gradient(ellipse 50% 40% at 80% 90%, rgba(139,92,246,0.1) 0%, transparent 60%),
+          #0a0d14
+        `,
+        color: '#f8fafc',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: '40px 24px',
+        justifyContent: 'flex-start',
+        padding: 'clamp(32px, 6vw, 60px) 24px 60px',
         overflowY: 'auto',
+        fontFamily: "'Outfit', 'Inter', sans-serif",
       }}
     >
-      {/* Brand Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '40px' }}>
-        <div className="logo-icon">
-          <Zap size={18} />
+      {/* Brand */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: 'clamp(36px, 6vw, 56px)' }}>
+        <div
+          style={{
+            width: '34px',
+            height: '34px',
+            borderRadius: '8px',
+            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            boxShadow: '0 0 20px rgba(99,102,241,0.4)',
+          }}
+        >
+          <Zap size={18} fill="white" />
         </div>
-        <span style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.02em' }}>TECHREEL AI</span>
+        <span style={{ fontSize: '1.2rem', fontWeight: 800, letterSpacing: '-0.02em' }}>TECHREEL AI</span>
       </div>
 
-      {/* Hero Content */}
-      <div style={{ maxWidth: '800px', textAlign: 'center', marginBottom: '36px' }}>
+      {/* Hero */}
+      <div style={{ maxWidth: '760px', textAlign: 'center', marginBottom: 'clamp(28px, 5vw, 44px)' }}>
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            background: 'rgba(99,102,241,0.12)',
+            border: '1px solid rgba(99,102,241,0.3)',
+            borderRadius: '999px',
+            padding: '5px 14px',
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            color: '#a5b4fc',
+            marginBottom: '20px',
+            letterSpacing: '0.04em',
+          }}
+        >
+          <Sparkles size={12} />
+          <span>Powered by Google Gemini · Semantic AI Reasoning</span>
+        </div>
+
         <h1
           style={{
-            fontFamily: "'Outfit', sans-serif",
-            fontSize: 'clamp(2.2rem, 5vw, 3.8rem)',
-            fontWeight: 800,
-            lineHeight: 1.15,
-            letterSpacing: '-0.03em',
-            background: 'linear-gradient(to right, #ffffff, #c7d2fe, #a5b4fc)',
+            fontSize: 'clamp(2rem, 5.5vw, 3.8rem)',
+            fontWeight: 900,
+            lineHeight: 1.1,
+            letterSpacing: '-0.035em',
+            background: 'linear-gradient(135deg, #ffffff 0%, #c7d2fe 50%, #a5b4fc 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-            marginBottom: '16px',
+            backgroundClip: 'text',
+            marginBottom: '18px',
           }}
         >
           Turn your scrolling into smarter technology discovery.
         </h1>
+
         <p
           style={{
-            fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
-            color: 'var(--text-secondary)',
-            lineHeight: 1.5,
-            maxWidth: '680px',
+            fontSize: 'clamp(0.95rem, 2.2vw, 1.15rem)',
+            color: '#94a3b8',
+            lineHeight: 1.6,
+            maxWidth: '580px',
             margin: '0 auto',
           }}
         >
-          Your Reel interactions reveal more than individual topics. Our AI connects the signals to discover what you're really interested in.
+          Your Reel interactions reveal more than individual topics.
+          Our AI connects the signals to discover what you're{' '}
+          <span style={{ color: '#c7d2fe', fontWeight: 700 }}>really</span> interested in.
         </p>
       </div>
 
-      {/* CTA Control Panel */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px', marginBottom: '50px', width: '100%', maxWidth: '380px' }}>
+      {/* CTAs */}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '12px',
+          marginBottom: 'clamp(36px, 6vw, 54px)',
+          width: '100%',
+          maxWidth: '360px',
+        }}
+      >
         {!showEmailInput ? (
           <>
             <button
@@ -80,70 +141,84 @@ export const LandingPage: React.FC = () => {
               className="judge-demo-btn"
               style={{
                 width: '100%',
-                padding: '14px 28px',
-                fontSize: '1.05rem',
-                borderRadius: 'var(--radius-pill)',
-                animation: 'pulse-glow 2s infinite',
+                padding: '15px 28px',
+                fontSize: '1rem',
+                fontWeight: 800,
+                borderRadius: '999px',
+                letterSpacing: '0.01em',
               }}
+              aria-label="Try Judge Demo — no login required"
             >
               <Zap size={16} fill="currentColor" />
               <span>⚡ TRY JUDGE DEMO</span>
             </button>
+            <div style={{ fontSize: '0.72rem', color: '#475569', marginTop: '-4px' }}>
+              No login required · 60-second demo
+            </div>
 
             <button
               onClick={() => setShowEmailInput(true)}
               className="btn btn-secondary"
-              style={{ width: '100%', padding: '12px 24px', borderRadius: 'var(--radius-pill)' }}
+              style={{ width: '100%', padding: '12px 24px', borderRadius: '999px', marginTop: '4px' }}
+              aria-label="Continue with email"
             >
-              <Mail size={16} />
+              <Mail size={15} />
               <span>CONTINUE WITH EMAIL</span>
             </button>
           </>
         ) : (
-          <form onSubmit={handleEmailSubmit} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <form
+            onSubmit={handleEmailSubmit}
+            style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '10px' }}
+            aria-label="Email sign-in form"
+          >
             {linkSent ? (
               <div
                 style={{
-                  background: 'rgba(16, 185, 129, 0.1)',
-                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                  background: 'rgba(16,185,129,0.1)',
+                  border: '1px solid rgba(16,185,129,0.35)',
                   padding: '16px',
-                  borderRadius: 'var(--radius-md)',
+                  borderRadius: '12px',
                   textAlign: 'center',
                   fontSize: '0.88rem',
                   color: '#a7f3d0',
+                  lineHeight: 1.5,
                 }}
+                role="status"
               >
-                🎉 Secure magic sign-in link dispatched to your inbox!
+                ✅ Signing you in — redirecting in a moment...
               </div>
             ) : (
               <>
-                <div className="form-group">
-                  <label className="form-label" style={{ textAlign: 'center', marginBottom: '8px' }}>
-                    Enter your email to sign in or create profile
-                  </label>
-                  <input
-                    type="email"
-                    className="form-input"
-                    placeholder="name@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    style={{ textAlign: 'center', padding: '12px', borderRadius: 'var(--radius-pill)' }}
-                  />
-                </div>
+                <label className="form-label" style={{ textAlign: 'center', fontSize: '0.82rem', color: '#94a3b8' }}>
+                  Enter your email — no password needed
+                </label>
+                <input
+                  type="email"
+                  className="form-input"
+                  placeholder="name@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoFocus
+                  style={{ textAlign: 'center', padding: '12px 16px', borderRadius: '999px' }}
+                  aria-label="Email address"
+                />
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  style={{ width: '100%', padding: '12px 24px', borderRadius: 'var(--radius-pill)' }}
+                  style={{ width: '100%', padding: '12px 24px', borderRadius: '999px' }}
                 >
+                  <ArrowRight size={15} />
                   <span>SEND SIGN-IN LINK</span>
                 </button>
                 <button
                   type="button"
                   className="btn btn-ghost btn-sm"
                   onClick={() => setShowEmailInput(false)}
+                  style={{ fontSize: '0.8rem' }}
                 >
-                  Back
+                  ← Back
                 </button>
               </>
             )}
@@ -151,39 +226,71 @@ export const LandingPage: React.FC = () => {
         )}
       </div>
 
-      {/* Visual Signal Synthesizer Diagram */}
+      {/* Visual Signal Diagram — How It Works */}
       <div
-        className="glass-card"
         style={{
           width: '100%',
-          maxWidth: '680px',
-          padding: '24px 30px',
-          background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.05) 100%), var(--bg-glass-card)',
-          border: '1px solid var(--border-glass)',
-          position: 'relative',
+          maxWidth: '640px',
+          background: 'rgba(26,35,58,0.55)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          borderRadius: '20px',
+          padding: 'clamp(20px, 4vw, 30px)',
         }}
+        role="img"
+        aria-label="How TechReel AI works diagram"
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', justifyContent: 'center' }}>
-          <Brain size={16} color="var(--accent-primary)" />
-          <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)', fontWeight: 700 }}>
-            How Semantic Cross-Reel Reasoning Works
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            justifyContent: 'center',
+            marginBottom: '22px',
+          }}
+        >
+          <Brain size={15} color="#a5b4fc" />
+          <span
+            style={{
+              fontSize: '0.72rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              color: '#64748b',
+              fontWeight: 700,
+            }}
+          >
+            Semantic Cross-Reel Reasoning
           </span>
         </div>
 
-        {/* Pipeline Grid */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
-          {/* Inputs */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '14px',
+          }}
+        >
+          {/* Input Signals */}
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            {['Java Meme ☕', 'Coding Interview 💻', 'SWE Career 🚀', 'Laptop Gadget 🔌'].map((label, idx) => (
+            {SIGNALS.map((label, idx) => (
               <span
                 key={idx}
-                className="badge"
                 style={{
-                  background: 'rgba(0, 0, 0, 0.4)',
-                  border: '1px solid var(--border-subtle)',
                   padding: '6px 12px',
-                  fontSize: '0.8rem',
-                  color: 'var(--text-primary)',
+                  borderRadius: '999px',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  transition: 'all 0.4s ease',
+                  background: idx === activeSignal
+                    ? 'rgba(99,102,241,0.25)'
+                    : 'rgba(255,255,255,0.04)',
+                  border: idx === activeSignal
+                    ? '1px solid rgba(99,102,241,0.5)'
+                    : '1px solid rgba(255,255,255,0.08)',
+                  color: idx === activeSignal ? '#c7d2fe' : '#64748b',
+                  transform: idx === activeSignal ? 'scale(1.04)' : 'scale(1)',
                 }}
               >
                 {label}
@@ -191,53 +298,60 @@ export const LandingPage: React.FC = () => {
             ))}
           </div>
 
-          <div style={{ color: 'var(--accent-primary)', fontSize: '1rem', fontWeight: 800 }}>↓</div>
+          {/* Arrow */}
+          <div style={{ color: '#6366f1', fontSize: '1.3rem', fontWeight: 900, lineHeight: 1 }}>↓</div>
 
-          {/* Inference */}
+          {/* Hidden Interest */}
           <div
             style={{
-              background: 'rgba(99, 102, 241, 0.12)',
-              border: '1px solid rgba(99, 102, 241, 0.3)',
-              borderRadius: 'var(--radius-pill)',
-              padding: '8px 20px',
-              fontSize: '0.88rem',
-              fontWeight: 700,
-              color: '#c7d2fe',
+              background: 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.15))',
+              border: '1px solid rgba(99,102,241,0.4)',
+              borderRadius: '999px',
+              padding: '10px 22px',
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
             }}
           >
-            <Sparkles size={14} />
-            <span>AI INFERRED INTEREST: SOFTWARE ENGINEERING</span>
+            <Sparkles size={14} color="#a5b4fc" />
+            <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#c7d2fe' }}>
+              🧠 HIDDEN INTEREST: SOFTWARE ENGINEERING
+            </span>
           </div>
 
-          <div style={{ color: 'var(--accent-cyan)', fontSize: '1rem', fontWeight: 800 }}>↓</div>
+          {/* Arrow */}
+          <div style={{ color: '#06b6d4', fontSize: '1.3rem', fontWeight: 900, lineHeight: 1 }}>↓</div>
 
           {/* Recommendation */}
           <div
             style={{
-              background: 'rgba(16, 185, 129, 0.1)',
-              border: '1px solid rgba(16, 185, 129, 0.4)',
-              borderRadius: 'var(--radius-md)',
-              padding: '12px 18px',
+              background: 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(6,182,212,0.1))',
+              border: '1px solid rgba(16,185,129,0.4)',
+              borderRadius: '14px',
+              padding: '14px 20px',
               textAlign: 'center',
               maxWidth: '380px',
             }}
           >
-            <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: '#6ee7b7', fontWeight: 700, marginBottom: '2px' }}>
-              HIGH-LEVERAGE RECOMMENDATION
+            <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', color: '#6ee7b7', fontWeight: 700, marginBottom: '4px', letterSpacing: '0.06em' }}>
+              🎯 SMART RECOMMENDATION
             </div>
-            <div style={{ fontSize: '0.88rem', fontWeight: 800, color: 'white' }}>
-              System Design & High-Level Architecture (HLD)
+            <div style={{ fontSize: '0.95rem', fontWeight: 800, color: 'white' }}>
+              System Design & High-Level Architecture
             </div>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-              Bypasses keyword repetition (beginner Java) to elevate learning.
-            </p>
+            <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '4px' }}>
+              Not another Java reel — your interest is deeper.
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Footer tagline */}
+      <p style={{ marginTop: '28px', fontSize: '0.78rem', color: '#334155', textAlign: 'center' }}>
+        TechReel AI · Semantic AI Reasoning · Built for PromptWars 2026
+      </p>
     </div>
   );
 };
+
 export default LandingPage;
