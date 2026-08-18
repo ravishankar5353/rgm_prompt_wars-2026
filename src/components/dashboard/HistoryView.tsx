@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Search, Filter, History, Zap, Calendar, Sparkles, Tag } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Search, Filter, History, Zap, Calendar, Sparkles, Tag, ArrowUpDown, X, SlidersHorizontal } from 'lucide-react';
 import { useTechReel } from '../../context/TechReelContext';
 import { AnalysisResult } from '../../types/analysis';
 
@@ -8,72 +8,116 @@ export const HistoryView: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [difficultyFilter, setDifficultyFilter] = useState('ALL');
+  const [confidenceFilter, setConfidenceFilter] = useState('ALL');
+  const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'confidence'>('newest');
 
-  const filteredHistory = analysisHistory.filter((item) => {
-    const matchesSearch =
-      searchQuery === '' ||
-      item.hiddenInterest.inferredInterest.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.primaryRecommendation.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.inputReelTitles.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
+  const filteredHistory = useMemo(() => {
+    let result = [...analysisHistory];
 
-    const matchesCategory =
-      categoryFilter === 'ALL' || item.primaryRecommendation.category === categoryFilter;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(
+        (item) =>
+          item.hiddenInterest.inferredInterest.toLowerCase().includes(q) ||
+          item.primaryRecommendation.title.toLowerCase().includes(q) ||
+          item.primaryRecommendation.category.toLowerCase().includes(q) ||
+          item.inputReelTitles.some((t) => t.toLowerCase().includes(q))
+      );
+    }
 
-    const matchesDifficulty =
-      difficultyFilter === 'ALL' || item.primaryRecommendation.difficulty === difficultyFilter;
+    if (categoryFilter !== 'ALL') {
+      result = result.filter((item) => item.primaryRecommendation.category === categoryFilter);
+    }
 
-    return matchesSearch && matchesCategory && matchesDifficulty;
-  });
+    if (difficultyFilter !== 'ALL') {
+      result = result.filter((item) => item.primaryRecommendation.difficulty === difficultyFilter);
+    }
+
+    if (confidenceFilter !== 'ALL') {
+      result = result.filter((item) => item.hiddenInterest.confidence === confidenceFilter);
+    }
+
+    result.sort((a, b) => {
+      if (sortBy === 'newest') return b.timestamp - a.timestamp;
+      if (sortBy === 'oldest') return a.timestamp - b.timestamp;
+      if (sortBy === 'confidence') return b.hiddenInterest.confidenceScore - a.hiddenInterest.confidenceScore;
+      return 0;
+    });
+
+    return result;
+  }, [analysisHistory, searchQuery, categoryFilter, difficultyFilter, confidenceFilter, sortBy]);
+
+  const hasActiveFilters =
+    searchQuery.trim() !== '' ||
+    categoryFilter !== 'ALL' ||
+    difficultyFilter !== 'ALL' ||
+    confidenceFilter !== 'ALL' ||
+    sortBy !== 'newest';
+
+  const resetFilters = () => {
+    setSearchQuery('');
+    setCategoryFilter('ALL');
+    setDifficultyFilter('ALL');
+    setConfidenceFilter('ALL');
+    setSortBy('newest');
+  };
 
   return (
-    <div style={{ maxWidth: '1000px', margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div style={{ maxWidth: '1000px', margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', gap: '18px' }}>
       {/* Search & Filter Bar */}
       <div
         className="glass-card"
         style={{
-          padding: '16px 20px',
+          padding: '14px 18px',
           display: 'flex',
-          gap: '12px',
-          flexWrap: 'wrap',
-          alignItems: 'center',
+          flexDirection: 'column',
+          gap: '10px',
         }}
       >
-        <div
-          style={{
-            flex: 1,
-            minWidth: '220px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            background: 'rgba(0, 0, 0, 0.25)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: 'var(--radius-sm)',
-            padding: '6px 12px',
-          }}
-        >
-          <Search size={15} color="var(--text-muted)" />
-          <input
-            type="text"
-            placeholder="Search past analyses, recommendations, or reel titles..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
+          <div
             style={{
-              background: 'transparent',
-              border: 'none',
-              outline: 'none',
-              color: 'var(--text-primary)',
-              fontSize: '0.85rem',
-              width: '100%',
+              flex: 1,
+              minWidth: '220px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(0, 0, 0, 0.25)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '6px 12px',
             }}
-          />
-        </div>
+          >
+            <Search size={14} color="var(--text-muted)" />
+            <input
+              type="text"
+              placeholder="Search past analyses, inferred interests, recommendations..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                outline: 'none',
+                color: 'var(--text-primary)',
+                fontSize: '0.82rem',
+                width: '100%',
+              }}
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 0 }}
+              >
+                <X size={13} />
+              </button>
+            )}
+          </div>
 
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <select
             className="form-select"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            style={{ padding: '6px 10px', fontSize: '0.8rem' }}
+            style={{ padding: '6px 10px', fontSize: '0.78rem' }}
           >
             <option value="ALL">All Categories</option>
             <option value="AI">AI</option>
@@ -82,19 +126,58 @@ export const HistoryView: React.FC = () => {
             <option value="Cloud">Cloud</option>
             <option value="Hardware">Hardware</option>
             <option value="Cybersecurity">Cybersecurity</option>
+            <option value="Career">Career</option>
           </select>
 
           <select
             className="form-select"
             value={difficultyFilter}
             onChange={(e) => setDifficultyFilter(e.target.value)}
-            style={{ padding: '6px 10px', fontSize: '0.8rem' }}
+            style={{ padding: '6px 10px', fontSize: '0.78rem' }}
           >
-            <option value="ALL">All Difficulties</option>
+            <option value="ALL">All Levels</option>
             <option value="Beginner">Beginner</option>
             <option value="Intermediate">Intermediate</option>
             <option value="Advanced">Advanced</option>
           </select>
+
+          <select
+            className="form-select"
+            value={confidenceFilter}
+            onChange={(e) => setConfidenceFilter(e.target.value)}
+            style={{ padding: '6px 10px', fontSize: '0.78rem' }}
+          >
+            <option value="ALL">All Confidences</option>
+            <option value="High">High Confidence</option>
+            <option value="Medium">Medium Confidence</option>
+            <option value="Low">Low Confidence</option>
+          </select>
+
+          <select
+            className="form-select"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+            style={{ padding: '6px 10px', fontSize: '0.78rem' }}
+          >
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="confidence">Highest Confidence</option>
+          </select>
+
+          {hasActiveFilters && (
+            <button
+              className="btn btn-ghost btn-sm"
+              onClick={resetFilters}
+              style={{ fontSize: '0.75rem', color: 'var(--accent-rose)', padding: '4px 8px' }}
+            >
+              Reset
+            </button>
+          )}
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+          <span>Showing {filteredHistory.length} of {analysisHistory.length} saved sessions</span>
+          <span style={{ color: 'var(--accent-emerald)', fontWeight: 600 }}>🔒 Protected with Supabase RLS</span>
         </div>
       </div>
 
@@ -132,7 +215,7 @@ export const HistoryView: React.FC = () => {
                     {item.hiddenInterest.inferredInterest}
                   </strong>
                   <span className="badge badge-confidence-high" style={{ fontSize: '0.72rem' }}>
-                    {item.hiddenInterest.confidenceScore}% Confidence
+                    {item.hiddenInterest.confidenceScore}% Confidence ({item.hiddenInterest.confidence})
                   </span>
                 </div>
 
@@ -154,7 +237,7 @@ export const HistoryView: React.FC = () => {
                   Recommended Tech Breakthrough:
                 </div>
                 <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#c7d2fe' }}>
-                  [{item.primaryRecommendation.category}] {item.primaryRecommendation.title}
+                  [{item.primaryRecommendation.category}] {item.primaryRecommendation.title} ({item.primaryRecommendation.difficulty})
                 </div>
                 <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
                   {item.requiredOutput.whyThisRecommendation}
@@ -174,3 +257,4 @@ export const HistoryView: React.FC = () => {
     </div>
   );
 };
+export default HistoryView;

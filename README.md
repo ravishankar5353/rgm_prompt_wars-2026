@@ -115,14 +115,16 @@ src/
 │   ├── judge/
 │   │   └── JudgeDemoWalkthrough.tsx # Isolated one-time judge sandbox
 │   ├── reels/
-│   │   ├── ReelList.tsx             # Reel grid + analyze button
-│   │   ├── ReelCard.tsx             # Individual reel display card
-│   │   └── ReelInputModal.tsx       # Add / edit reel form
+│   │   ├── ReelList.tsx             # Reel grid + search/filters + sort
+│   │   ├── ReelCard.tsx             # Individual reel card with AI feedback CTA
+│   │   ├── ReelInputModal.tsx       # Quick add / edit reel form
+│   │   ├── ReelUploadModal.tsx      # Multi-stage AI ingestion & upload pipeline
+│   │   └── ReelDetailView.tsx       # Video player, scorecard, feedback & comments
 │   ├── graph/
 │   │   └── InteractiveInterestGraph.tsx  # Lightweight 2D interest tree
 │   └── dashboard/
 │       ├── AnalyticsDashboard.tsx   # Insights view
-│       └── HistoryView.tsx          # Past analyses with search + filter
+│       └── HistoryView.tsx          # Past analyses with search + filters
 ├── context/
 │   └── TechReelContext.tsx          # Centralized state + API orchestration
 ├── services/
@@ -131,7 +133,7 @@ src/
 │   └── storageService.ts            # LocalStorage persistence
 ├── types/
 │   ├── analysis.ts                  # Core type definitions
-│   ├── reel.ts                      # Reel interaction types
+│   ├── reel.ts                      # Reel, comment, transcript & AI feedback types
 │   └── feedback.ts                  # Feedback types
 └── styles/
     └── designSystem.css             # Design tokens + component styles
