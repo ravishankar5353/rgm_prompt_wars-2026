@@ -1,196 +1,1279 @@
-# TECHREEL AI ⚡
-> **"Turn your scrolling into smarter technology discovery."**
+# 🚀 TechReel AI
 
-[![Built for PromptWars 2026](https://img.shields.io/badge/PromptWars-2026%20Competition-6366f1?style=for-the-badge&logo=google)](https://github.com/ravishankar5353/rgm_prompt_wars-2026.git)
-[![Powered by Google Gemini](https://img.shields.io/badge/AI-Google%20Gemini%201.5%20Flash-8b5cf6?style=for-the-badge&logo=googlegemini)](https://aistudio.google.com/)
-[![Stack](https://img.shields.io/badge/Stack-React%2019%20%7C%20TypeScript%20%7C%20Vite%20%7C%20Supabase-06b6d4?style=for-the-badge)](https://vitejs.dev/)
+### Turn your scrolling into smarter technology discovery.
 
----
-
-## 1. Problem Statement
-Students spend significant time scrolling short-form video feeds (Reels, Shorts, TikTok). While much of this content provides harmless entertainment, it rarely delivers educational depth or career leverage. 
-
-Current recommendation algorithms optimize strictly for short-term engagement and shallow keyword matching, frequently trapping students in repetitive meme loops (e.g., watching a Java joke leads to more basic Java jokes).
+> TechReel AI doesn't just recognize what you watched.
+> It understands what your interactions collectively mean.
 
 ---
 
-## 2. Motivation
-The goal is **not** to stop social media usage or fight human scrolling behavior. The goal is to **make existing scrolling more useful** by transforming casual entertainment interactions into structured, high-leverage technology discovery and career acceleration.
+## 🏆 PromptWars × RGM CSE — 2026
+
+TechReel AI is an AI-powered recommendation agent designed to help students discover useful technology content from the short-form content they already interact with.
+
+The goal is NOT to stop social media usage.
+
+The goal is to make existing scrolling:
+
+More relevant → More useful → More technology-focused.
 
 ---
 
-## 3. Solution Overview
-**TechReel AI** is an explainable, adaptive AI recommendation agent that analyzes multiple Reel interactions, infers underlying technical interests and career aspirations through cross-reel semantic reasoning, and recommends engaging, high-retention technology micro-learning content tailored to the student's emerging engineering trajectory.
+# 🎯 PROBLEM STATEMENT
+
+Students spend significant time scrolling short-form content. Much of it may be harmless entertainment but provide little educational or career value.
+
+A student's interactions may include:
+
+- Programming memes
+- Coding content
+- Software-engineering lifestyle
+- Coding interviews
+- AI
+- Gaming
+- Gadgets
+- Career content
+- Technology news
+- Entertainment
+
+The challenge is that a single Reel does not necessarily represent the user's actual interest.
+
+For example:
+
+Java Meme
++
+Software Engineer Lifestyle
++
+Coding Interview Joke
++
+Laptop Comparison
+
+A shallow keyword-based system may recommend:
+
+Java
+↓
+Another Java Reel
+
+But a stronger system should infer:
+
+Java
++
+Coding
++
+Career
++
+Technology
+↓
+Software Engineering
+↓
+System Design / HLD / Backend / DSA
+
+This is the core problem TechReel AI solves.
 
 ---
 
-## 4. Innovation & The Official Built-in Trap
+# 💡 OUR SOLUTION
 
-### The Trap Scenario
-A student interacts with:
-1. **Java programming meme** (NullPointerException joke)
-2. **Software-engineer lifestyle Reel** (Backend day-in-the-life, microservices)
-3. **Coding interview joke** (Inverting a binary tree whiteboard challenge)
-4. **Laptop comparison** (MacBook M3 Max vs ThinkPad for Docker builds)
+TechReel AI uses Gemini-powered semantic reasoning to analyze multiple Reel interactions together.
 
-### Shallow Keyword System vs. TechReel AI Agent
+Instead of asking:
 
-| Dimension | Traditional Keyword System | TechReel AI Agent (Our Innovation) |
-| :--- | :--- | :--- |
-| **Input Analysis** | Naive extraction: `"Java"`, `"Laptop"` | Multi-signal semantic synthesis |
-| **Inferred Domain** | Surface keyword repetition | **Software Engineering / Distributed Systems** |
-| **Recommendation** | *Top 5 Beginner Java Variables & If-Else Loops* | **High-Level Design (HLD): Microservices Cache Invalidation at Scale** |
-| **Novelty Score** | 18% (Trapped in beginner loop) | **88% (Career acceleration milestone)** |
-| **Hype Risk** | High (Generic clickbait & sales pitches) | **Low (Deep architectural engineering)** |
-| **Outcome** | Stagnation | **High-leverage career milestone** |
+"What keyword appeared most?"
 
----
+TechReel AI asks:
 
-## 5. Core User Workflow
+"What do these interactions collectively reveal about the student's broader technology interests?"
 
-```mermaid
-graph TD
-    A[Student Browses / Interacts with Reels] --> B[Add / Quick-Paste 3-8 Reel Interactions]
-    B --> C[Analyze My Scrolling]
-    C --> D[Google Gemini Semantic Synthesis]
-    D --> E[Cross-Reel Signal Correlation]
-    E --> F[Hidden Interest Discovery]
-    F --> G[Interactive Interest Graph]
-    G --> H[Novelty, Saturation & Hype-Risk Filter]
-    H --> I[High-Leverage Recommendation + DNA]
-    I --> J[Official Specification Output + Evidence Trail]
-    J --> K[User Feedback Loop: Useful / Adapt]
-    K --> L[Adaptive Profile & Future Projections]
-```
+The system analyzes:
+
+- Topic
+- Context
+- Interaction type
+- Watch percentage
+- Cross-Reel relationships
+- Semantic similarity
+- Broader interest patterns
+- Repetition
+- Novelty
+- Learning value
+- Career relevance
+- Difficulty
+- Recommendation history
+- User feedback
+- Hype risk
 
 ---
 
-## 6. Key Features (P0, P1, P2)
+# 🧠 CORE WORKFLOW
 
-### P0 — Core Capabilities
-- **ChatGPT-Style Native Interface**: Seamless conversation sidebar, chat streams, quick suggestion pills, and voice input.
-- **User Reel Management**: Add, edit, delete, reorder, and review interactions with category tags, watch completion %, and interaction types (Watched, Liked, Saved, Shared).
-- **Quick Add Bar**: Instant paste box for captions and descriptions with auto-category detection.
-- **Real Google Gemini AI Integration**: Live connection to Gemini 1.5 Flash with structured JSON output and schema validation.
-- **Hidden Interest Discovery**: Visually dominant hero card displaying inferred domain, confidence score, and contributing signal chains.
-- **Required Output Specification**: Strictly formatted PromptWars output card containing:
-  - `CURRENT REEL REFERENCE`
-  - `INTEREST DETECTED`
-  - `WHY (EVIDENCE)`
-  - `RECOMMENDED TECH REEL`
-  - `CATEGORY`
-  - `WHY THIS RECOMMENDATION`
-  - `DIFFICULTY`
-  - `CONFIDENCE`
-- **Recommendation DNA**: Explainable AI-estimated signals (Interest Match, Context Match, Novelty, Learning Value, Difficulty Fit, Hype Risk).
-- **Why This / Why Not Cards**: Explicit breakdown of why the recommendation was selected, why keyword repetition was rejected, and why generic hype was filtered out.
-- **Topic Saturation Detector**: Identifies repeated categories (e.g. 3+ Java/AI reels) and explores adjacent engineering fields (HLD, Distributed Caching, Cloud, DevOps).
-- **Focus vs. Explore Modes**: Toggle between maximum relevance (`Focus Mode`) and novel horizon discovery (`Explore Mode`).
-- **Judge Demo Mode (`⚡ TRY JUDGE DEMO`)**: 60-second guided walkthrough of the official trap and agentic reasoning breakthrough.
-
-### P1 & P2 — Advanced Capabilities
-- **Interactive Interest Graph**: Hierarchical SVG node graph mapping Root -> Domain -> Subdomain -> Concepts.
-- **Semantic vs. Keyword Benchmark**: Side-by-side comparative analysis card.
-- **Mixed Signal Detector**: Detects unfocused entertainment inputs (food, comedy, pets) and transparently suggests adding technical signals without fabricating false interests.
-- **Interest Evolution Progression**: Historical tracking of Earlier -> Current -> Emerging interests.
-- **Analytics Dashboard**: Distribution charts for categories, confidence metrics, feedback rates, and exploration usage.
-- **What-If Predictive Simulator**: Previews how watching Cybersecurity, Cloud, Quantum, or Robotics reels would shift your interest graph without modifying active data.
-- **Privacy & Security Center**: Complete data transparency, single-click JSON export, and local data deletion.
-- **Voice Dictation**: Web Speech API integration with graceful text input fallback.
-- **Supabase Cloud + Resilient Local Persistence**: Works out of the box locally and supports cloud Supabase instances with Row-Level Security (RLS).
+REEL INTERACTIONS
+        ↓
+INPUT VALIDATION
+        ↓
+GEMINI SEMANTIC AI
+        ↓
+CROSS-REEL REASONING
+        ↓
+HIDDEN INTEREST DISCOVERY
+        ↓
+RECOMMENDATION GENERATION
+        ↓
+NOVELTY + REPETITION CHECK
+        ↓
+HYPE RISK FILTERING
+        ↓
+EXPLAINABLE RECOMMENDATION
+        ↓
+USER FEEDBACK
+        ↓
+ADAPTIVE DISCOVERY
 
 ---
 
-## 7. Tech Stack
+# 🔥 CORE INNOVATION
 
-- **Frontend Core**: React 19, TypeScript, Vite
-- **Styling**: Custom Glassmorphism Design System (CSS Custom Properties, Fluid Layouts, Dark/Light Themes, High-Contrast & Reduced-Motion accessibility)
-- **AI Reasoning**: Google Gemini API (`@google/generative-ai`), Custom Deterministic Fallback Engine
-- **Database & Auth**: Supabase (`@supabase/supabase-js`) with Postgres RLS + Browser LocalStorage Sync
-- **Icons & Polish**: Lucide React, Canvas Confetti
-- **Testing**: Vitest automated test suite
+## Traditional Recommendation
 
----
+Keyword
+↓
+Topic
+↓
+Same Topic
 
-## 8. Supabase Architecture & Row Level Security
+Example:
 
-The Postgres database schema is located in `supabase/schema.sql` and includes:
-1. `profiles`: User account details and preferences.
-2. `reel_interactions`: Logged reel title, caption, watch %, and interaction type.
-3. `detected_interests`: Inferred domains and confidence metrics.
-4. `recommendations`: Delivered recommendations, DNA metrics, and explainability records.
-5. `recommendation_feedback`: Student ratings and rejection reasons.
-6. `notifications`: In-app alert history.
-
-All tables are protected with Row Level Security (`ENABLE ROW LEVEL SECURITY`) ensuring users can only read and write their own data.
+Java
+↓
+Java
+↓
+Another Java Reel
 
 ---
 
-## 9. Setup & Installation
+## TECHREEL AI
 
-### Prerequisites
-- Node.js 18+ (tested on Node v24.14.0)
-- npm 9+
+Java
++
+Coding Interview
++
+Software Career
++
+Laptop
++
+Programming
+↓
+Semantic Relationship
+↓
+Software Engineering
+↓
+System Design / HLD
 
-### 1. Clone & Install
-```bash
+The system moves from keyword matching to context-aware interest discovery.
+
+---
+
+# 🎬 JUDGE DEMO SCENARIO
+
+The built-in Judge Demo demonstrates the official trap.
+
+## Reel 1 — Programming Meme
+
+Title:
+Java Developer Life 😂
+
+Content:
+A humorous Reel about Java programming and debugging.
+
+Interaction:
+Liked
+
+Watch:
+92%
+
+---
+
+## Reel 2 — Career
+
+Title:
+Day in the Life of a Software Engineer
+
+Content:
+A Reel showing the daily workflow, tools and responsibilities of a software engineer.
+
+Interaction:
+Watched
+
+Watch:
+88%
+
+---
+
+## Reel 3 — Coding Interview
+
+Title:
+When the Interviewer Says "One More DSA Question" 😭
+
+Content:
+A programming interview joke involving coding problems and technical interviews.
+
+Interaction:
+Liked
+
+Watch:
+95%
+
+---
+
+## Reel 4 — Hardware
+
+Title:
+Best Laptop for Developers 💻
+
+Content:
+A comparison of laptops suitable for programming and software development.
+
+Interaction:
+Saved
+
+Watch:
+84%
+
+---
+
+# 🧠 AI ANALYSIS
+
+The system should NOT simply detect:
+
+Java → Java
+
+Instead:
+
+Java
++
+Programming
++
+Software Career
++
+Coding Interviews
++
+Developer Hardware
+↓
+Software Engineering / Technology
+
+---
+
+# 🎯 REQUIRED AI OUTPUT
+
+CURRENT REEL:
+[Reference]
+
+INTEREST DETECTED:
+Software Engineering / Technology
+
+WHY:
+[Evidence from the Reel interactions]
+
+RECOMMENDED TECH REEL:
+[Recommended topic/title]
+
+CATEGORY:
+HLD / System Design
+
+WHY THIS RECOMMENDATION:
+[Connection to detected interest]
+
+DIFFICULTY:
+Intermediate
+
+CONFIDENCE:
+High
+
+---
+
+# ⚔️ KEYWORD VS SEMANTIC DEMO
+
+## Weak System
+
+Java
+↓
+Java
+↓
+Another Java Reel
+
+## TECHREEL AI
+
+Java
++
+Coding
++
+Career
++
+Interviews
++
+Technology
+↓
+Software Engineering
+↓
+System Design
+
+This is one of the primary competitive differentiators of the project.
+
+---
+
+# 🎯 EXAMPLE RECOMMENDATION
+
+Recommended Tech Reel:
+
+"System Design Basics Every Software Engineer Should Understand"
+
+Category:
+HLD / System Design
+
+Difficulty:
+Intermediate
+
+Why?
+
+The student's interactions indicate a broader software-engineering interest rather than an isolated interest in Java.
+
+System Design expands that interest into an important adjacent technology skill.
+
+---
+
+# 🚫 WHY NOT ANOTHER JAVA REEL?
+
+Java already appears strongly in the interaction history.
+
+Repeating Java content may provide lower novelty.
+
+TechReel AI therefore considers related technology areas that:
+
+- Match the inferred interest
+- Add novelty
+- Provide learning value
+- Avoid unnecessary repetition
+
+---
+
+# 🛡️ HYPE CONTENT AVOIDANCE
+
+The system should avoid blindly recommending generic hype content such as:
+
+"10 AI Tools That Will Get You a Job"
+
+when it has weak contextual relevance.
+
+Instead, recommendations prioritize:
+
+Interest Match
++
+Context Match
++
+Novelty
++
+Learning Value
++
+Difficulty Fit
+
+The system does not claim perfect misinformation or clickbait detection.
+
+---
+
+# 🔄 RECOMMENDATION FATIGUE
+
+Repeated recommendations from the same topic can cause content fatigue.
+
+Example:
+
+Java
+Java
+Java
+Java
+
+TechReel AI can detect:
+
+Topic Saturation Detected
+
+and explore related areas such as:
+
+DSA
+HLD
+Backend
+APIs
+Cloud
+
+when supported by the user's interaction context.
+
+---
+
+# 🎯 FOCUS & EXPLORE
+
+## 🎯 Focus Mode
+
+Provides highly relevant recommendations.
+
+Strong Interest
+↓
+Highly Relevant Technology
+
+## 🌱 Explore Mode
+
+Introduces relevant but slightly novel technology topics.
+
+Known Interest
+↓
+Related Technology
+↓
+New Discovery
+
+---
+
+# 👍 FEEDBACK LOOP
+
+After each recommendation:
+
+👍 Useful
+
+👎 Not Relevant
+
+🔄 Try Another
+
+If the user selects Not Relevant, they can provide a reason:
+
+- Too Basic
+- Too Advanced
+- Already Know This
+- Not Interested
+- Not Relevant
+
+The feedback becomes contextual preference data for future recommendations.
+
+---
+
+# 👤 USER WORKFLOW
+
+LANDING PAGE
+↓
+TRY JUDGE DEMO
+OR
+CONTINUE WITH EMAIL
+↓
+ADD 3–8 REELS
+↓
+ANALYZE MY SCROLLING
+↓
+GEMINI SEMANTIC ANALYSIS
+↓
+HIDDEN INTEREST
+↓
+EVIDENCE
+↓
+SMART RECOMMENDATION
+↓
+WHY THIS?
+↓
+WHY NOT?
+↓
+USER FEEDBACK
+↓
+ADAPTIVE DISCOVERY
+
+The application is intentionally designed so a first-time user can understand the core workflow within seconds.
+
+---
+
+# ⚡ JUDGE DEMO FLOW
+
+The complete demonstration can be performed in approximately 60–90 seconds.
+
+Step 1:
+Open TechReel AI.
+
+Step 2:
+Click:
+
+⚡ TRY JUDGE DEMO
+
+Step 3:
+Show the four Reel interactions:
+
+Java
+Software Engineer
+Coding Interview
+Laptop
+
+Step 4:
+Click:
+
+🧠 ANALYZE MY SCROLLING
+
+Step 5:
+Show:
+
+HIDDEN INTEREST
+
+Software Engineering
+
+Step 6:
+Show the evidence.
+
+Step 7:
+Show:
+
+KEYWORD SYSTEM
+Java → Java
+
+versus:
+
+TECHREEL AI
+Multiple Signals
+↓
+Software Engineering
+↓
+System Design
+
+Step 8:
+Show:
+
+WHY THIS?
+
+and:
+
+WHY NOT ANOTHER JAVA REEL?
+
+Step 9:
+Give feedback or generate another recommendation.
+
+---
+
+# 🔐 AUTHENTICATION
+
+TechReel AI uses Supabase Authentication.
+
+The preferred flow is passwordless email authentication.
+
+Enter Email
+↓
+Send Sign-In Link
+↓
+Open Email
+↓
+Authenticated
+
+The application does not implement its own password storage.
+
+Authenticated sessions are persisted using Supabase.
+
+Users can log out through their profile/settings menu.
+
+---
+
+# 🧪 DEMO VS USER DATA
+
+The Judge Demo is intentionally separated from authenticated user data.
+
+JUDGE DEMO
+↓
+Temporary Demo Experience
+↓
+No Personal History Pollution
+
+Authenticated users:
+
+USER ACCOUNT
+↓
+Personal Reel History
+↓
+Recommendations
+↓
+Feedback
+↓
+Interest History
+
+---
+
+# 🗄️ SUPABASE
+
+Supabase is used for authentication and persistent user data.
+
+Core entities include:
+
+profiles
+reel_interactions
+recommendations
+recommendation_feedback
+detected_interests
+interest_history
+
+Row Level Security should ensure users can access only their own personal data.
+
+---
+
+# 🤖 GEMINI AI
+
+Google Gemini powers the semantic reasoning layer.
+
+The AI considers:
+
+- Reel topic
+- Context
+- Interaction type
+- Watch percentage
+- Cross-Reel relationships
+- Broader interests
+- Repetition
+- Novelty
+- Learning value
+- Career relevance
+- Difficulty
+- Hype risk
+- Previous recommendations
+- User feedback
+
+The AI response is structured and validated before being displayed.
+
+---
+
+# 🧠 AI RESPONSE STRUCTURE
+
+{
+  "current_reel": "",
+  "interest_detected": "",
+  "why": "",
+  "recommended_tech_reel": "",
+  "category": "",
+  "why_this_recommendation": "",
+  "difficulty": "",
+  "confidence": ""
+}
+
+Additional contextual information may include:
+
+detected_topics
+evidence
+interest_relationships
+novelty_reason
+hype_risk
+repetition_risk
+alternative_recommendations
+
+The application does not expose private model chain-of-thought.
+
+Only concise user-facing evidence is shown.
+
+---
+
+# 📊 RECOMMENDATION SIGNALS
+
+The UI can display AI-estimated signals:
+
+Interest Match
+Context Match
+Novelty
+Learning Value
+Difficulty Fit
+Hype Risk
+
+These are product-level AI estimates and should not be interpreted as scientific benchmark scores.
+
+---
+
+# 🌳 INTEREST MAP
+
+TechReel AI can visualize inferred relationships.
+
+Example:
+
+Technology
+│
+├── Software Engineering
+│   ├── Java
+│   ├── DSA
+│   └── HLD
+│
+└── Hardware
+    └── Laptops
+
+The visualization is lightweight and based on detected relationships.
+
+---
+
+# 📈 INSIGHTS
+
+Authenticated users can view useful insights such as:
+
+- Top inferred interests
+- Recommendation feedback
+- Topic saturation
+- Recent interest evolution
+
+When there is insufficient data:
+
+"Not enough data yet."
+
+The system never fabricates statistics.
+
+---
+
+# 🔎 HISTORY
+
+Authenticated users can review:
+
+- Reel interactions
+- Previous analyses
+- Recommendations
+- Feedback
+- Detected interests
+
+History can be filtered by:
+
+Category
+Date
+Difficulty
+
+---
+
+# 💬 AI ASSISTANT
+
+The existing ChatGPT-style interface allows contextual questions such as:
+
+"Why did you recommend this?"
+
+"Give me something easier."
+
+"Give me another recommendation."
+
+"Show me something related to AI."
+
+"Why not Java?"
+
+"Explore something new."
+
+The assistant should use the current analysis and recommendation context instead of returning static responses.
+
+---
+
+# 🎨 UI / UX
+
+TechReel AI follows a premium modern AI SaaS design.
+
+Design principles:
+
+- Clean
+- Minimal
+- Fast
+- Responsive
+- Accessible
+- Explainable
+- Modern
+
+UI includes:
+
+- ChatGPT-style interaction
+- AI workspace
+- Dark/light mode
+- Modern cards
+- Subtle gradients
+- Glass-style elements
+- Smooth micro-interactions
+- Skeleton loading
+- Responsive layouts
+- Accessible controls
+
+The design intentionally avoids excessive:
+
+- Neon effects
+- Glow
+- 3D
+- WebGL
+- Heavy animations
+- Unnecessary UI elements
+
+---
+
+# 📱 RESPONSIVE DESIGN
+
+TechReel AI is designed for:
+
+Desktop
+Tablet
+Mobile
+
+The core analysis flow remains accessible on all screen sizes.
+
+---
+
+# ♿ ACCESSIBILITY
+
+The application aims to support:
+
+- Keyboard navigation
+- Semantic labels
+- Visible focus states
+- Good color contrast
+- Screen-reader-friendly controls
+- Reduced-motion preferences
+
+---
+
+# 🛡️ ERROR HANDLING
+
+The application handles:
+
+- Empty Reel input
+- Fewer than 3 Reels
+- Invalid fields
+- Gemini API failures
+- Network failures
+- Supabase failures
+- Authentication failures
+- Expired sessions
+- Malformed AI responses
+
+Users receive clear messages instead of raw errors or stack traces.
+
+---
+
+# 🔒 SECURITY
+
+Sensitive credentials are never exposed in frontend code.
+
+Environment variables are used for:
+
+Gemini API credentials
+Supabase configuration
+
+Never commit:
+
+.env
+
+Use:
+
+.env.example
+
+instead.
+
+Supabase Row Level Security should protect user-specific data.
+
+---
+
+# 🏗️ ARCHITECTURE
+
+                    ┌────────────────────┐
+                    │     TECHREEL AI    │
+                    │      FRONTEND      │
+                    └─────────┬──────────┘
+                              │
+                ┌─────────────┴─────────────┐
+                │                           │
+                ▼                           ▼
+       ┌─────────────────┐        ┌─────────────────┐
+       │   GEMINI AI     │        │    SUPABASE     │
+       │ Semantic Engine │        │ Auth + Database │
+       └────────┬────────┘        └────────┬────────┘
+                │                           │
+                └─────────────┬─────────────┘
+                              │
+                              ▼
+                    ┌────────────────────┐
+                    │ Recommendation     │
+                    │ Engine             │
+                    └─────────┬──────────┘
+                              │
+                              ▼
+                    ┌────────────────────┐
+                    │ Explainable AI     │
+                    │ Recommendation     │
+                    └────────────────────┘
+
+---
+USER WORKFLOW:-
+LANDING PAGE
+      ↓
+TRY JUDGE DEMO
+      OR
+CONTINUE WITH EMAIL
+      ↓
+ADD 3–8 REELS
+      ↓
+ANALYZE MY SCROLLING
+      ↓
+GEMINI SEMANTIC ANALYSIS
+      ↓
+HIDDEN INTEREST
+      ↓
+EVIDENCE
+      ↓
+SMART RECOMMENDATION
+      ↓
+WHY THIS?
+      ↓
+WHY NOT?
+      ↓
+USER FEEDBACK
+      ↓
+ADAPTIVE DISCOVERY
+
+# 🛠️ TECHNOLOGY STACK
+
+## Frontend
+
+- React / Next.js based on the existing project architecture
+- TypeScript
+- Modern CSS / Tailwind where applicable
+- Responsive UI components
+- Framer Motion where appropriate
+- Lucide Icons
+
+## AI
+
+- Google Gemini
+
+## Backend / Database
+
+- Supabase
+- PostgreSQL
+- Supabase Authentication
+
+## Deployment
+
+- Vercel
+
+## Development
+
+- GitHub
+- Antigravity
+- VS Code
+- npm
+
+---
+
+# 🔑 ENVIRONMENT VARIABLES
+
+Create a local .env file.
+
+Example:
+
+GEMINI_API_KEY=your_gemini_api_key
+
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+Use .env.example as the safe repository template.
+
+Never commit real API keys.
+
+---
+
+# 🚀 LOCAL DEVELOPMENT
+
+## 1. Clone
+
 git clone https://github.com/ravishankar5353/rgm_prompt_wars-2026.git
+
+## 2. Enter project
+
 cd rgm_prompt_wars-2026
+
+## 3. Install dependencies
+
 npm install
-```
 
-### 2. Configure Environment Variables
-Copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
-```
-Fill in your Google Gemini API key (optional for demo; local deterministic reasoning is enabled by default):
-```env
-VITE_GEMINI_API_KEY=your_gemini_api_key_here
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key_here
-VITE_DEMO_MODE=true
-```
+## 4. Configure environment variables
 
-### 3. Run Development Server
-```bash
+Create:
+
+.env
+
+and add the required credentials.
+
+## 5. Start development server
+
 npm run dev
-```
-Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### 4. Run Automated Test Suite
-```bash
-npm run test
-```
+---
 
-### 5. Production Build
-```bash
+# 🧪 PRODUCTION BUILD
+
+Run:
+
 npm run build
-```
+
+The production build should complete successfully before deployment.
 
 ---
 
-## 10. Vercel Deployment
-TechReel AI is 100% Vercel-ready with zero server-side lock-in.
+# ☁️ VERCEL DEPLOYMENT
 
-1. Push your repository to GitHub.
-2. Import the repository in [Vercel](https://vercel.com).
-3. Add environment variables (`VITE_GEMINI_API_KEY`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`).
-4. Click **Deploy**.
+TechReel AI is designed for Vercel deployment.
 
----
+GitHub
+↓
+Vercel
+↓
+Environment Variables
+↓
+Production Build
+↓
+TechReel AI
 
-## 11. Security & Privacy
-- Zero scraping of private Instagram/TikTok passwords or social accounts.
-- API keys are handled securely via environment variables or encrypted in browser session memory.
-- Personal data can be reviewed, exported as JSON, or wiped in one click via the Privacy Center.
-
----
-
-## 12. Limitations & Future Scope
-- **Current Limitation**: Reel interactions are provided via titles, captions, and links rather than direct real-time video pixel processing.
-- **Future Scope**: Direct integration with Gemini 1.5 Pro multimodal video API for automated video transcription, timeline bookmarking, and personalized interactive coding playgrounds.
+Configure all required environment variables in the Vercel project settings.
 
 ---
 
-**Built with pride for PromptWars 2026 by the TechReel AI Engineering Team.**
+# 🧪 TESTING
+
+Important workflows to test:
+
+Landing
+↓
+Judge Demo
+↓
+Email Authentication
+↓
+Session Persistence
+↓
+Add Reel
+↓
+Validation
+↓
+Gemini Analysis
+↓
+Recommendation
+↓
+Feedback
+↓
+History
+↓
+Logout
+
+Critical test cases include:
+
+- Fewer than 3 Reels
+- Valid Reel inputs
+- Invalid inputs
+- Gemini failure
+- Malformed AI response
+- Mixed interests
+- Topic repetition
+- Hype recommendation
+- Authentication failure
+- Logout
+- Mobile responsiveness
+
+---
+
+# 🧩 SAMPLE SCENARIOS
+
+## Scenario 1 — Software Engineering
+
+Java
+Coding Interview
+Software Engineer
+Laptop
+
+Possible inferred interest:
+
+Software Engineering / Technology
+
+---
+
+## Scenario 2 — AI / ML
+
+Python
+Machine Learning
+LLM
+AI Research
+
+Possible inferred interest:
+
+AI / Machine Learning
+
+---
+
+## Scenario 3 — Gaming Technology
+
+Gaming
+GPU
+PC Build
+Hardware
+
+Possible inferred interest:
+
+Gaming Technology / Hardware
+
+---
+
+## Scenario 4 — Mixed Signals
+
+Gaming
+Music
+Cooking
+Entertainment
+One Coding Reel
+
+Expected behavior:
+
+Mixed / Weak Technology Signal
+
+The system should not force a technology interest when the evidence is insufficient.
+
+---
+
+# 🏆 COMPETITIVE DIFFERENTIATION
+
+TechReel AI is not simply:
+
+Reel
+↓
+Keyword
+↓
+Recommendation
+
+Instead:
+
+Reel Interactions
+↓
+Semantic Understanding
+↓
+Cross-Context Reasoning
+↓
+Hidden Interest Discovery
+↓
+Recommendation Filtering
+↓
+Explainable Recommendation
+↓
+User Feedback
+↓
+Adaptive Discovery
+
+## The key idea:
+
+"We don't just recommend what matches the words you watched. We infer what your interactions collectively reveal about your technology interests."
+
+---
+
+# 🎯 OFFICIAL REQUIRED OUTPUT MAPPING
+
+The official problem statement requires:
+
+CURRENT REEL:
+Reference to the analyzed Reel.
+
+INTEREST DETECTED:
+The inferred broader topic or interest.
+
+WHY:
+Evidence from the user's interactions.
+
+RECOMMENDED TECH REEL:
+The recommended technology topic/title.
+
+CATEGORY:
+AI
+DSA
+Java
+HLD
+Cybersecurity
+Cloud
+Hardware
+Career
+Other
+
+WHY THIS RECOMMENDATION:
+Connection between detected interest and recommendation.
+
+DIFFICULTY:
+Beginner
+Intermediate
+Advanced
+
+CONFIDENCE:
+High
+Medium
+Low
+
+---
+
+# 🚧 LIMITATIONS
+
+- Recommendation quality depends on the quality of user-provided Reel information.
+- Gemini availability depends on API availability and limits.
+- The system does not directly access private social-media watch history.
+- Detected interests are probabilistic.
+- AI recommendations should not be treated as absolute facts.
+- Better input signals generally produce better recommendations.
+- AI-estimated recommendation signals are not scientific measurements.
+
+---
+
+# 🔮 FUTURE SCOPE
+
+Potential future improvements include:
+
+- Authorized social-media integrations
+- Multimodal Reel understanding
+- Video/audio analysis
+- Advanced interest graphs
+- Long-term interest evolution
+- Personalized learning paths
+- Recommendation diversity optimization
+- Privacy-preserving personalization
+- On-device processing
+- More advanced recommendation evaluation
+
+---
+
+# 🌍 VISION
+
+TechReel AI does not aim to eliminate short-form content.
+
+It aims to change what students discover while scrolling.
+
+Instead of:
+
+Scroll
+↓
+Entertainment
+↓
+Scroll
+↓
+Entertainment
+
+We envision:
+
+Scroll
+↓
+Understand
+↓
+Discover
+↓
+Learn
+↓
+Explore Technology
+
+---
+
+# 👨‍💻 PROJECT INFORMATION
+
+## TechReel AI
+
+PromptWars × RGM CSE — 2026
+
+Repository:
+
+https://github.com/ravishankar5353/rgm_prompt_wars-2026.git
+
+---
+
+# ❤️ FINAL THOUGHT
+
+## Don't stop scrolling.
+
+## Make your scrolling smarter.
+
+# 🚀 TECHREEL AI
+
+### Turn your scrolling into smarter technology discovery.
