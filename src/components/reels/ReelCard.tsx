@@ -10,6 +10,8 @@ import {
   Share2,
   Play,
   Film,
+  Sparkles,
+  MessageSquare,
 } from 'lucide-react';
 import { ReelInteraction } from '../../types/reel';
 
@@ -19,6 +21,7 @@ interface ReelCardProps {
   totalCount: number;
   onEdit: (reel: ReelInteraction) => void;
   onDelete: (id: string) => void;
+  onSelectReel?: (reel: ReelInteraction) => void;
   onMoveUp?: () => void;
   onMoveDown?: () => void;
 }
@@ -29,6 +32,7 @@ export const ReelCard: React.FC<ReelCardProps> = ({
   totalCount,
   onEdit,
   onDelete,
+  onSelectReel,
   onMoveUp,
   onMoveDown,
 }) => {
@@ -137,6 +141,18 @@ export const ReelCard: React.FC<ReelCardProps> = ({
         </p>
       </div>
 
+      {/* Tags preview */}
+      {reel.tags && reel.tags.length > 0 && (
+        <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
+          {reel.tags.slice(0, 3).map((t, idx) => (
+            <span key={idx} style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+              #{t}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Watch completion bar */}
       <div style={{ marginTop: 'auto', paddingTop: '8px', borderTop: '1px solid var(--border-subtle)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '4px' }}>
           <span>Watch Completion</span>
@@ -144,7 +160,7 @@ export const ReelCard: React.FC<ReelCardProps> = ({
             {reel.watchPercentage}%
           </span>
         </div>
-        <div style={{ width: '100%', height: '4px', background: 'rgba(255, 255, 255, 0.08)', borderRadius: '99px', overflow: 'hidden' }}>
+        <div style={{ width: '100%', height: '4px', background: 'rgba(255, 255, 255, 0.08)', borderRadius: '99px', overflow: 'hidden', marginBottom: '10px' }}>
           <div
             style={{
               width: `${reel.watchPercentage}%`,
@@ -154,7 +170,35 @@ export const ReelCard: React.FC<ReelCardProps> = ({
             }}
           />
         </div>
+
+        {/* Action Button: Watch & AI Feedback */}
+        {onSelectReel && (
+          <button
+            onClick={() => onSelectReel(reel)}
+            className="btn btn-secondary btn-sm"
+            style={{
+              width: '100%',
+              fontSize: '0.78rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              background: 'rgba(99, 102, 241, 0.09)',
+              borderColor: 'rgba(99, 102, 241, 0.3)',
+              color: '#c7d2fe',
+            }}
+          >
+            <Play size={13} fill="currentColor" />
+            <span>Watch & View AI Feedback</span>
+            {reel.comments && reel.comments.length > 0 && (
+              <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                <MessageSquare size={10} /> {reel.comments.length}
+              </span>
+            )}
+          </button>
+        )}
       </div>
     </div>
   );
 };
+

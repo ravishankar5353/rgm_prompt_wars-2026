@@ -7,20 +7,27 @@ import {
   RotateCcw,
   CheckCircle2,
   FolderGit2,
-  HelpCircle,
-  TrendingUp,
+  UploadCloud,
+  Layers,
+  Brain,
+  Play,
 } from 'lucide-react';
 import { useTechReel } from '../../context/TechReelContext';
 import { ReelCard } from './ReelCard';
 import { QuickAddBar } from './QuickAddBar';
 import { ReelInputModal } from './ReelInputModal';
+import { ReelUploadModal } from './ReelUploadModal';
+import { ReelDetailView } from './ReelDetailView';
 import { ReelInteraction, ReelFormData } from '../../types/reel';
 import { PRESET_SCENARIOS } from '../../config/constants';
 
 export const ReelList: React.FC = () => {
   const {
     reels,
+    selectedReel,
+    setSelectedReel,
     addReel,
+    uploadReel,
     updateReel,
     deleteReel,
     reorderReels,
@@ -32,6 +39,7 @@ export const ReelList: React.FC = () => {
   } = useTechReel();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [editingReel, setEditingReel] = useState<ReelInteraction | null>(null);
 
   const handleEdit = (reel: ReelInteraction) => {
@@ -48,10 +56,31 @@ export const ReelList: React.FC = () => {
     setEditingReel(null);
   };
 
+  const handleSaveUpload = (data: ReelFormData, autoOpenDetail?: boolean) => {
+    const uploaded = uploadReel(data);
+    if (autoOpenDetail) {
+      setSelectedReel(uploaded);
+    }
+  };
+
   const handleRun = async () => {
     await runAnalysis();
     setActiveTab('interests');
   };
+
+  // If a reel is selected for deep detail & feedback view
+  if (selectedReel) {
+    return (
+      <ReelDetailView
+        reel={selectedReel}
+        onBack={() => setSelectedReel(null)}
+        onAnalyze={() => {
+          setSelectedReel(null);
+          handleRun();
+        }}
+      />
+    );
+  }
 
   const isMinimumMet = reels.length >= 3;
 
@@ -118,7 +147,21 @@ export const ReelList: React.FC = () => {
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => setIsUploadModalOpen(true)}
+            style={{
+              background: 'linear-gradient(135deg, rgba(99,102,241,0.15), rgba(6,182,212,0.15))',
+              border: '1px solid rgba(99,102,241,0.4)',
+              color: '#c7d2fe',
+              fontWeight: 700,
+            }}
+          >
+            <UploadCloud size={14} />
+            <span>Upload Reel Video</span>
+          </button>
+
           <button
             className="btn btn-secondary btn-sm"
             onClick={() => {
@@ -161,6 +204,15 @@ export const ReelList: React.FC = () => {
           <span>[ USE SAMPLE REELS ]</span>
         </button>
 
+        <button
+          className="btn btn-ghost btn-sm"
+          onClick={() => setIsUploadModalOpen(true)}
+          style={{ fontSize: '0.78rem', color: '#a5b4fc' }}
+        >
+          <UploadCloud size={13} />
+          <span>Upload Custom Video</span>
+        </button>
+
         {reels.length > 0 && (
           <button
             className="btn btn-ghost btn-sm"
@@ -184,11 +236,18 @@ export const ReelList: React.FC = () => {
             No Reel Interactions Yet
           </h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', maxWidth: '420px', margin: '0 auto 18px', lineHeight: 1.45 }}>
-            To discover your technology trajectory, add 3 or more Reels or click <strong>[ USE SAMPLE REELS ]</strong> to load 4 fictional examples.
+            To discover your technology trajectory, add 3 or more Reels, upload a video reel, or click <strong>[ USE SAMPLE REELS ]</strong> to load 4 pre-analyzed examples.
           </p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
             <button className="btn btn-primary btn-sm" onClick={() => loadScenario('official-trap')}>
               Load Sample Reels
+            </button>
+            <button
+              className="btn btn-secondary btn-sm"
+              onClick={() => setIsUploadModalOpen(true)}
+            >
+              <UploadCloud size={14} />
+              <span>Upload Video Reel</span>
             </button>
             <button
               className="btn btn-secondary btn-sm"
@@ -217,6 +276,7 @@ export const ReelList: React.FC = () => {
               totalCount={reels.length}
               onEdit={handleEdit}
               onDelete={deleteReel}
+              onSelectReel={(r) => setSelectedReel(r)}
               onMoveUp={() => reorderReels(index, index - 1)}
               onMoveDown={() => reorderReels(index, index + 1)}
             />
@@ -233,6 +293,14 @@ export const ReelList: React.FC = () => {
             setIsModalOpen(false);
             setEditingReel(null);
           }}
+        />
+      )}
+
+      {/* Reel Upload Modal */}
+      {isUploadModalOpen && (
+        <ReelUploadModal
+          onSave={handleSaveUpload}
+          onClose={() => setIsUploadModalOpen(false)}
         />
       )}
     </div>

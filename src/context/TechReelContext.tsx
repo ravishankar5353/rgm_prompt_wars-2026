@@ -22,7 +22,9 @@ export type ActiveTab =
   | 'analytics'
   | 'history'
   | 'simulator'
-  | 'privacy';
+  | 'privacy'
+  | 'reel-detail'
+  | 'upload-reel';
 
 interface TechReelContextType {
   // Navigation & States
@@ -37,6 +39,8 @@ interface TechReelContextType {
 
   // Global States
   reels: ReelInteraction[];
+  selectedReel: ReelInteraction | null;
+  setSelectedReel: (reel: ReelInteraction | null) => void;
   currentAnalysis: AnalysisResult | null;
   analysisHistory: AnalysisResult[];
   isAnalyzing: boolean;
@@ -67,7 +71,8 @@ interface TechReelContextType {
   toggleReducedMotion: () => void;
 
   // Reel management
-  addReel: (data: ReelFormData) => void;
+  addReel: (data: ReelFormData) => ReelInteraction;
+  uploadReel: (data: ReelFormData) => ReelInteraction;
   updateReel: (id: string, data: ReelFormData) => void;
   deleteReel: (id: string) => void;
   reorderReels: (startIndex: number, endIndex: number) => void;
@@ -129,6 +134,8 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Demo Reels (Separate from Authenticated Profile)
   const [demoReels, setDemoReels] = useState<ReelInteraction[]>(PRESET_SCENARIOS[0].reels);
   const [demoAnalysisResult, setDemoAnalysisResult] = useState<AnalysisResult | null>(null);
+
+  const [selectedReel, setSelectedReel] = useState<ReelInteraction | null>(null);
 
   // Authenticated Reels & Profiles
   const [reels, setReels] = useState<ReelInteraction[]>(() => {
@@ -284,11 +291,56 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   // REEL MANAGEMENT
-  const addReel = (data: ReelFormData) => {
+  const addReel = (data: ReelFormData): ReelInteraction => {
     const newReel: ReelInteraction = {
       ...data,
       id: `reel-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
       timestamp: Date.now(),
+      videoUrl: data.videoUrl || 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+      creatorName: data.creatorName || 'You (Creator)',
+      creatorAvatar: '⚡',
+      tags: data.tags || [data.category, 'TechDiscovery'],
+      comments: [
+        {
+          id: `c-init-${Date.now()}`,
+          authorName: 'TechReel AI Assistant',
+          authorRole: 'AI Agent Insight',
+          content: `💡 New signal registered: "${data.title}" (${data.category}, ${data.watchPercentage}% watch).`,
+          timestamp: Date.now(),
+          likes: 5,
+          isAiInsight: true,
+        },
+      ],
+      aiFeedback: {
+        hookScore: Math.floor(Math.random() * 12) + 86,
+        hookEvaluation: 'Clear opening premise engages target audience interest.',
+        pacingScore: Math.floor(Math.random() * 10) + 87,
+        pacingEvaluation: 'Concise visual structure supports high retention.',
+        techClarityScore: Math.floor(Math.random() * 10) + 88,
+        techClarityEvaluation: `Demonstrates relevant concepts in ${data.category}.`,
+        viralityScore: Math.floor(Math.random() * 12) + 85,
+        sentimentBreakdown: {
+          positive: 90,
+          neutral: 8,
+          negative: 2,
+          summary: 'Positive response from peers and technical learners.',
+        },
+        keyStrengths: [
+          'High relevance to current engineering interests',
+          'Good concise presentation style',
+          'Clear categorical signal for recommendation model',
+        ],
+        improvements: [
+          'Can link to system design and architectural breakdown documentation',
+        ],
+        inferredTopics: data.tags && data.tags.length > 0 ? data.tags : [data.category, 'Software Engineering'],
+        actionableSummary: 'Successfully added to your active scrolling profile for Gemini semantic analysis.',
+      },
+      transcript: [
+        { timestamp: '00:00', seconds: 0, text: `Overview: ${data.title}` },
+        { timestamp: '00:04', seconds: 4, text: data.caption || 'Analyzing core technological concept...' },
+        { timestamp: '00:09', seconds: 9, text: 'Takeaway: High leverage discovery signal registered.' },
+      ],
     };
     setReels((prev) => [newReel, ...prev]);
     addNotification({
@@ -296,6 +348,13 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       title: 'Reel Added',
       message: `"${data.title}" added to your scrolling profile. (${reels.length + 1} total)`,
     });
+    return newReel;
+  };
+
+  const uploadReel = (data: ReelFormData): ReelInteraction => {
+    const uploaded = addReel(data);
+    setSelectedReel(uploaded);
+    return uploaded;
   };
 
   const updateReel = (id: string, data: ReelFormData) => {
@@ -661,6 +720,8 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         isAuthenticated,
         setIsAuthenticated: setIsAuthenticatedState,
         reels,
+        selectedReel,
+        setSelectedReel,
         currentAnalysis,
         analysisHistory,
         isAnalyzing,
@@ -686,6 +747,7 @@ export const TechReelProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         toggleHighContrast,
         toggleReducedMotion,
         addReel,
+        uploadReel,
         updateReel,
         deleteReel,
         reorderReels,
